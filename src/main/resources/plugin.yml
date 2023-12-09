@@ -1,0 +1,4 @@
+name: BetterFishing
+version: '${project.version}'
+main: org.layanegg.betterfishing.BetterFishing
+api-version: '1.20'
