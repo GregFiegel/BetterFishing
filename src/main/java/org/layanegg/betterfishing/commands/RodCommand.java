@@ -13,14 +13,12 @@ public class RodCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
         // /rod - gives the player a fishing rod
-        if (command.getName().equalsIgnoreCase("rod")){
-            if (sender instanceof Player p){
-                Inventory i = p.getInventory();
-                i.addItem(new ItemStack(Material.FISHING_ROD));
-            }
-            //System.out.println("RUNNING ROD COMMAND");
-        }
 
+        if (sender instanceof Player p){
+            Inventory i = p.getInventory();
+            i.addItem(new ItemStack(Material.FISHING_ROD));
+        }
+        //System.out.println("RUNNING ROD COMMAND");
         return true;
     }
 }

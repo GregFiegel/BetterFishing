@@ -20,7 +20,7 @@ public class XPBottleBreakListener implements Listener {
             block.applyBoneMeal(blockFace);
             ProjectileSource proj = e.getEntity().getShooter();
             if (proj instanceof Player p){
-                p.sendMessage("bone meal!!");
+                p.sendMessage("Bonemeal!");
             }
         }catch (NullPointerException exception){
             //System.out.println("NULL POINTER EXCEPTION");

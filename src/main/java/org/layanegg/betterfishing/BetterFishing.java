@@ -4,7 +4,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.layanegg.betterfishing.commands.FeedCommand;
+import org.layanegg.betterfishing.commands.RodCommand;
 import org.layanegg.betterfishing.listeners.XPBottleBreakListener;
+
+import java.util.Objects;
 
 
 public final class BetterFishing extends JavaPlugin implements Listener {
@@ -14,6 +18,8 @@ public final class BetterFishing extends JavaPlugin implements Listener {
         // Plugin startup logic
         getServer().getPluginManager().registerEvents(this, this);
         getServer().getPluginManager().registerEvents(new XPBottleBreakListener(), this);
+        Objects.requireNonNull(getCommand("rod")).setExecutor(new RodCommand());
+        Objects.requireNonNull(getCommand("feed")).setExecutor(new FeedCommand());
     }
 
     @EventHandler
