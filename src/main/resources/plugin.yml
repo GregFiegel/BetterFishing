@@ -2,3 +2,7 @@ name: BetterFishing
 version: '${project.version}'
 main: org.layanegg.betterfishing.BetterFishing
 api-version: '1.20'
+commands:
+  rod:
+    description: An easy way to get a fishing rod!
+    usage: /<command>

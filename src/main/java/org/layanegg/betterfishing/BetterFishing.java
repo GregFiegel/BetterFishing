@@ -6,6 +6,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.layanegg.betterfishing.listeners.XPBottleBreakListener;
 
+
 public final class BetterFishing extends JavaPlugin implements Listener {
 
     @Override
