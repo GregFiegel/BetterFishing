@@ -25,22 +25,7 @@ public class FishCaughtListener implements Listener {
 
         if(e.getState().equals(PlayerFishEvent.State.CAUGHT_FISH)){
             Player p = e.getPlayer();
-
-            //get the material of the item fished up
-            Material material = null;
-            if (Objects.requireNonNull(e.getCaught()).getType().equals(EntityType.DROPPED_ITEM)){
-                Item item = (Item) e.getCaught();
-                material = item.getItemStack().getType();
-            }
-
-            //get the number of XP to add based on the item caught
-            int toAdd;
-            assert material != null;
-            if (material.equals(Material.COD)){
-                toAdd = 10;
-            }else{
-                toAdd = 15;
-            }
+            int toAdd = getToAdd(e);
 
             //Add the XP to the players fishing XP and display the corresponding info
             PersistentDataContainer data = p.getPersistentDataContainer();
@@ -59,5 +44,24 @@ public class FishCaughtListener implements Listener {
                 p.sendMessage(ChatColor.GREEN + "You now have "+ toAdd +" fishing XP!");
             }
         }
+    }
+
+    private static int getToAdd(PlayerFishEvent e) {
+        //get the material of the item fished up
+        Material material = null;
+        if (Objects.requireNonNull(e.getCaught()).getType().equals(EntityType.DROPPED_ITEM)){
+            Item item = (Item) e.getCaught();
+            material = item.getItemStack().getType();
+        }
+
+        //get the number of XP to add based on the item caught
+        int toAdd;
+        assert material != null;
+        if (material.equals(Material.COD)){
+            toAdd = 10;
+        }else{
+            toAdd = 15;
+        }
+        return toAdd;
     }
 }
