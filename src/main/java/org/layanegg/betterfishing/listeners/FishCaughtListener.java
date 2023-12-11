@@ -9,9 +9,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerFishEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.layanegg.betterfishing.BetterFishing;
+import org.layanegg.betterfishing.LootTables.CustomFishingLootTable;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 public class FishCaughtListener implements Listener {
@@ -24,6 +29,16 @@ public class FishCaughtListener implements Listener {
     public void onFishCaught(PlayerFishEvent e){
 
         if(e.getState().equals(PlayerFishEvent.State.CAUGHT_FISH)){
+            if (Objects.requireNonNull(e.getCaught()).getType().equals(EntityType.DROPPED_ITEM)){
+                Item item = (Item) e.getCaught();
+                HashMap<Material, Double> oddsMap = new HashMap<>();
+                oddsMap.put(Material.DIAMOND_BLOCK, 0.01);
+                oddsMap.put(Material.DIAMOND, 0.09);
+                oddsMap.put(Material.COAL, 0.9);
+                ArrayList<ItemStack> items = new CustomFishingLootTable().getFishingDrop(oddsMap);
+                ItemStack item1  = items.get(0);
+                item.setItemStack(item1);
+            }
             Player p = e.getPlayer();
             int toAdd = getToAdd(e);
 
@@ -57,7 +72,7 @@ public class FishCaughtListener implements Listener {
         //get the number of XP to add based on the item caught
         int toAdd;
         assert material != null;
-        if (material.equals(Material.COD)){
+        if (material.equals(Material.COAL)){
             toAdd = 10;
         }else{
             toAdd = 15;
