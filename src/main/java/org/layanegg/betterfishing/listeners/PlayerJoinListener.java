@@ -28,6 +28,6 @@ public class PlayerJoinListener implements Listener {
     }
 
     private boolean hasJoinedBefore(Player p){
-        return p.getPersistentDataContainer().has(new NamespacedKey(plugin, "fishXP"), PersistentDataType.INTEGER);
+        return p.getPersistentDataContainer().has(new NamespacedKey(plugin, "fishXP"), PersistentDataType.DOUBLE);
     }
 }

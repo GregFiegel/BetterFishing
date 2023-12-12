@@ -17,7 +17,7 @@ public class CustomFishingLootTable{
         Random rand = new Random();
         double num = rand.nextDouble();
         double oddsSoFar = 0.0;
-        System.out.println(oddsList.toString());
+        //System.out.println(oddsList.toString());
         for(ProbabilityInfo probabilityInfo : oddsList){
             double curOdds = probabilityInfo.getOdds();
             if (curOdds + oddsSoFar > num){

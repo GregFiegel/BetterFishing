@@ -14,6 +14,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.layanegg.betterfishing.BetterFishing;
 import org.layanegg.betterfishing.LootTables.CustomFishingLootTable;
+import org.layanegg.betterfishing.LootTables.FishingTable;
 import org.layanegg.betterfishing.LootTables.ProbabilityInfo;
 
 import java.util.*;
@@ -29,19 +30,16 @@ public class FishCaughtListener implements Listener {
 
         if(e.getState().equals(PlayerFishEvent.State.CAUGHT_FISH)){
 
+            FishingTable table = getLootTable();
             if (e.getCaught() instanceof Item item){
-                ArrayList<ProbabilityInfo> oddsList = new ArrayList<>();
-                oddsList.add(new ProbabilityInfo(Material.DIAMOND, 0.1, 1, 3));
-                oddsList.add(new ProbabilityInfo(Material.COAL, 0.8, 2, 6));
-                oddsList.add(new ProbabilityInfo(Material.NETHER_BRICK, 0.05, 4, 16));
-                oddsList.add(new ProbabilityInfo(Material.NETHER_PORTAL, 0.05, 1, 1));
-
+                ArrayList<ProbabilityInfo> oddsList = table.getOddsList();
                 ArrayList<ItemStack> items = new CustomFishingLootTable(oddsList).getFishingDrop();
                 ItemStack item1  = items.get(0);
                 item.setItemStack(item1);
             }
             Player p = e.getPlayer();
             double toAdd = getToAdd(e);
+            toAdd = Math.ceil(toAdd);
 
             //Add the XP to the players fishing XP and display the corresponding info
             PersistentDataContainer data = p.getPersistentDataContainer();
@@ -49,9 +47,10 @@ public class FishCaughtListener implements Listener {
             Double fishXP = data.get(nsk, PersistentDataType.DOUBLE);
             assert fishXP != null;
             fishXP += toAdd;
+            fishXP = Math.ceil(fishXP);
             data.set(nsk, PersistentDataType.DOUBLE, fishXP);
-            p.sendMessage(ChatColor.GREEN + "+" + toAdd + " Fishing XP!");
-            p.sendMessage(ChatColor.GREEN + "You now have " + fishXP + " fishing XP!");
+            p.sendMessage(ChatColor.GREEN + "+" + (int) toAdd + " Fishing XP!");
+            p.sendMessage(ChatColor.GREEN + "You now have " + fishXP.intValue() + " fishing XP!");
         }
     }
 
@@ -74,5 +73,12 @@ public class FishCaughtListener implements Listener {
         return toAdd;
     }
 
-    //private static
+    private static FishingTable getLootTable(){
+        Random rand = new Random();
+        double dub = rand.nextDouble();
+        if (dub < 0.1){
+            return FishingTable.TREASURE;
+        }
+        return  FishingTable.BASIC;
+    }
 }
