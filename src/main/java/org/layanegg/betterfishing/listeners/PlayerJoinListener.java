@@ -20,14 +20,15 @@ public class PlayerJoinListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e){
         Player p = e.getPlayer();
-        PersistentDataContainer  dataContainer = p.getPersistentDataContainer();
-        if(!hasJoinedBefore(p)){
-            dataContainer.set(new NamespacedKey(plugin, "fishXP"), PersistentDataType.DOUBLE, 0.0);
-            dataContainer.set(new NamespacedKey(plugin, "fishLVL"), PersistentDataType.INTEGER, 1);
+        PersistentDataContainer  playerData = p.getPersistentDataContainer();
+        if(!playerData.has(new NamespacedKey(plugin, "fishXP"), PersistentDataType.DOUBLE)){
+            playerData.set(new NamespacedKey(plugin, "fishXP"), PersistentDataType.DOUBLE, 0.0);
         }
-    }
-
-    private boolean hasJoinedBefore(Player p){
-        return p.getPersistentDataContainer().has(new NamespacedKey(plugin, "fishXP"), PersistentDataType.DOUBLE);
+        if(!playerData.has(new NamespacedKey(plugin, "fishLVL"), PersistentDataType.INTEGER)){
+            playerData.set(new NamespacedKey(plugin, "fishLVL"), PersistentDataType.INTEGER, 1);
+        }
+        if(!playerData.has(new NamespacedKey(plugin, "fishSPEED"), PersistentDataType.DOUBLE)){
+            playerData.set(new NamespacedKey(plugin, "fishSPEED"), PersistentDataType.DOUBLE, 100.0);
+        }
     }
 }

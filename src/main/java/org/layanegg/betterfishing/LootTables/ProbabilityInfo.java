@@ -5,7 +5,7 @@ import org.bukkit.Material;
 public class ProbabilityInfo {
     private final Material material;
     private final int levelReq;
-    private final double odds;
+    private double odds;
     private final int min;
     private final int max;
 
@@ -35,5 +35,8 @@ public class ProbabilityInfo {
     }
     public int getLevelReq() {
         return levelReq;
+    }
+    public void setOdds(double odds){
+        this.odds = odds;
     }
 }
