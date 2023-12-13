@@ -44,7 +44,7 @@ public class PlayerFishListener implements Listener {
             item.setItemStack(item1);
             //Add the XP to the players fishing XP and display the corresponding info
             Player p = e.getPlayer();
-            calculateXp(p, e.getCaught());
+            calculateXp(p, item);
         }
 
         if (e.getState().equals(PlayerFishEvent.State.FISHING) && !(e.getHook().getPersistentDataContainer().has(new NamespacedKey(plugin, "hookInfoUpdated"), PersistentDataType.BOOLEAN))){
@@ -81,16 +81,30 @@ public class PlayerFishListener implements Listener {
         assert fishXP != null;
         Integer fishLVL = playerData.get(fishLvlNSK, PersistentDataType.INTEGER);
         assert fishLVL != null;
-        Integer Lvl = didLevelUp(player, fishXP, fishLVL);
         fishXP += toAdd;
         fishXP = Math.ceil(fishXP);
-        playerData.set(fishXpNSK, PersistentDataType.DOUBLE, fishXP);
-        player.sendMessage(ChatColor.GREEN + "+" + (int) toAdd + " Fishing XP!");
-        player.sendMessage(ChatColor.GREEN + "You now have " + (int) fishXP + " fishing XP!");
+        Integer Lvl = didLevelUp(player, fishXP, fishLVL);
+        int fishXPint = Integer.parseInt(fishXP.toString()) ;
+        if (Lvl != -1){
+            player.sendMessage(ChatColor.GREEN + "+" + (int) toAdd + " Fishing XP!");
+            player.sendMessage(ChatColor.GREEN + "You now have " + fishXPint + " fishing XP!");
+            player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "You leveled up!");
+            player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "You are now fishing level " + Lvl + "!");
+            playerData.set(fishLvlNSK, PersistentDataType.INTEGER, Lvl);
+            playerData.set(fishXpNSK, PersistentDataType.DOUBLE, fishXP);
+        }else{
+            playerData.set(fishXpNSK, PersistentDataType.DOUBLE, fishXP);
+            player.sendMessage(ChatColor.GREEN + "+" + (int) toAdd + " Fishing XP!");
+            player.sendMessage(ChatColor.GREEN + "You now have " + fishXPint + " fishing XP!");
+        }
     }
 
     private Integer didLevelUp(Player player, Double fishXP, Integer fishLVL) {
-        XpTable xpTable = new XpTable();
+        HashMap<Integer, Double> xpTable = new XpTable().getXpTable();
+        if (fishXP > xpTable.get(fishLVL)){
+            return fishLVL + 1;
+        }
+        return -1;
     }
 
     private static double getToAdd(Entity entity) {

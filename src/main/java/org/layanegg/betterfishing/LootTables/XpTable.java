@@ -8,9 +8,14 @@ public class XpTable {
 
     public XpTable() {
         HashMap<Integer, Double> xpTable = new HashMap<>();
-        xpTable.put(1, 0.0);
-        xpTable.put(2, 10.0);
-        xpTable.put(3, );
+        for (int x=1;  x<=100; x++){
+            double y = 0.5*(Math.pow(x, 3)) + 50*(Math.pow(x, 2));
+            xpTable.put(x, y);
+        }
+        this.xpTable = xpTable;
+    }
+
+    public HashMap<Integer, Double> getXpTable() {
         return xpTable;
     }
 }
