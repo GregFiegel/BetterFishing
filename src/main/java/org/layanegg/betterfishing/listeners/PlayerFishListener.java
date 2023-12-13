@@ -3,10 +3,7 @@ package org.layanegg.betterfishing.listeners;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.FishHook;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerFishEvent;
@@ -17,6 +14,7 @@ import org.layanegg.betterfishing.BetterFishing;
 import org.layanegg.betterfishing.LootTables.CustomFishingLootTable;
 import org.layanegg.betterfishing.LootTables.FishingTable;
 import org.layanegg.betterfishing.LootTables.ProbabilityInfo;
+import org.layanegg.betterfishing.LootTables.XpTable;
 
 import java.util.*;
 
@@ -44,20 +42,9 @@ public class PlayerFishListener implements Listener {
             ItemStack item1  = items.get(0);
             assert item != null;
             item.setItemStack(item1);
-
             //Add the XP to the players fishing XP and display the corresponding info
             Player p = e.getPlayer();
-            double toAdd = getToAdd(e);
-            toAdd = Math.ceil(toAdd);
-            PersistentDataContainer playerData = p.getPersistentDataContainer();
-            NamespacedKey nsk = new NamespacedKey(plugin, "fishXP");
-            Double fishXP = playerData.get(nsk, PersistentDataType.DOUBLE);
-            assert fishXP != null;
-            fishXP += toAdd;
-            fishXP = Math.ceil(fishXP);
-            playerData.set(nsk, PersistentDataType.DOUBLE, fishXP);
-            p.sendMessage(ChatColor.GREEN + "+" + (int) toAdd + " Fishing XP!");
-            p.sendMessage(ChatColor.GREEN + "You now have " + fishXP.intValue() + " fishing XP!");
+            calculateXp(p, e.getCaught());
         }
 
         if (e.getState().equals(PlayerFishEvent.State.FISHING) && !(e.getHook().getPersistentDataContainer().has(new NamespacedKey(plugin, "hookInfoUpdated"), PersistentDataType.BOOLEAN))){
@@ -81,15 +68,36 @@ public class PlayerFishListener implements Listener {
             }else{
                 playerData.set(new NamespacedKey(plugin, "fishSPEED"), PersistentDataType.DOUBLE, 100.0);
             }
-
         }
     }
 
-    private static double getToAdd(PlayerFishEvent e) {
+    private void calculateXp(Player player, Entity entity) {
+        double toAdd = getToAdd(entity);
+        toAdd = Math.ceil(toAdd);
+        PersistentDataContainer playerData = player.getPersistentDataContainer();
+        NamespacedKey fishXpNSK = new NamespacedKey(plugin, "fishXP");
+        NamespacedKey fishLvlNSK = new NamespacedKey(plugin, "fishLVL");
+        Double fishXP = playerData.get(fishXpNSK, PersistentDataType.DOUBLE);
+        assert fishXP != null;
+        Integer fishLVL = playerData.get(fishLvlNSK, PersistentDataType.INTEGER);
+        assert fishLVL != null;
+        Integer Lvl = didLevelUp(player, fishXP, fishLVL);
+        fishXP += toAdd;
+        fishXP = Math.ceil(fishXP);
+        playerData.set(fishXpNSK, PersistentDataType.DOUBLE, fishXP);
+        player.sendMessage(ChatColor.GREEN + "+" + (int) toAdd + " Fishing XP!");
+        player.sendMessage(ChatColor.GREEN + "You now have " + (int) fishXP + " fishing XP!");
+    }
+
+    private Integer didLevelUp(Player player, Double fishXP, Integer fishLVL) {
+        XpTable xpTable = new XpTable();
+    }
+
+    private static double getToAdd(Entity entity) {
         //get the material of the item fished up
         Material material = null;
-        if (Objects.requireNonNull(e.getCaught()).getType().equals(EntityType.DROPPED_ITEM)){
-            Item item = (Item) e.getCaught();
+        if (Objects.requireNonNull(entity).getType().equals(EntityType.DROPPED_ITEM)){
+            Item item = (Item) entity;
             material = item.getItemStack().getType();
         }
 
