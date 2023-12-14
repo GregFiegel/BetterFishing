@@ -14,7 +14,8 @@ import org.layanegg.betterfishing.BetterFishing;
 import org.layanegg.betterfishing.LootTables.CustomFishingLootTable;
 import org.layanegg.betterfishing.LootTables.FishingTable;
 import org.layanegg.betterfishing.LootTables.ProbabilityInfo;
-import org.layanegg.betterfishing.LootTables.XpTable;
+import org.layanegg.betterfishing.xpInfo.XpTable;
+import org.layanegg.betterfishing.xpInfo.ItemXps;
 
 import java.util.*;
 
@@ -83,8 +84,8 @@ public class PlayerFishListener implements Listener {
         assert fishLVL != null;
         fishXP += toAdd;
         fishXP = Math.ceil(fishXP);
-        Integer Lvl = didLevelUp(player, fishXP, fishLVL);
-        int fishXPint = Integer.parseInt(fishXP.toString()) ;
+        Integer Lvl = didLevelUp(fishXP, fishLVL);
+        int fishXPint = fishXP.intValue();
         if (Lvl != -1){
             player.sendMessage(ChatColor.GREEN + "+" + (int) toAdd + " Fishing XP!");
             player.sendMessage(ChatColor.GREEN + "You now have " + fishXPint + " fishing XP!");
@@ -99,12 +100,20 @@ public class PlayerFishListener implements Listener {
         }
     }
 
-    private Integer didLevelUp(Player player, Double fishXP, Integer fishLVL) {
+    private Integer didLevelUp(Double fishXP, Integer fishLVL) {
         HashMap<Integer, Double> xpTable = new XpTable().getXpTable();
-        if (fishXP > xpTable.get(fishLVL)){
-            return fishLVL + 1;
+        int lvl = fishLVL;
+        while (true){
+            if (fishXP > xpTable.get(lvl)){
+                lvl++;
+            }else{
+                break;
+            }
         }
-        return -1;
+        if(fishLVL == lvl){
+            return -1;
+        }
+        return lvl;
     }
 
     private static double getToAdd(Entity entity) {
@@ -116,14 +125,9 @@ public class PlayerFishListener implements Listener {
         }
 
         //get the number of XP to add based on the item caught
-        double toAdd;
         assert material != null;
-        if (material.equals(Material.COAL)){
-            toAdd = 10.0;
-        }else{
-            toAdd = 15.0;
-        }
-        return toAdd;
+        HashMap<Material, Double> itemXps = new ItemXps().getItemXps();
+        return itemXps.getOrDefault(material, 10.0);
     }
 
     private static FishingTable getLootTable(){

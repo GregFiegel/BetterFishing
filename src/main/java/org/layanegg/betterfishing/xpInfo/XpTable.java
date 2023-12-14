@@ -1,4 +1,4 @@
-package org.layanegg.betterfishing.LootTables;
+package org.layanegg.betterfishing.xpInfo;
 
 import java.util.HashMap;
 
