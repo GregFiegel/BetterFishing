@@ -11,6 +11,6 @@ commands:
     description: Satiate your hunger
     usage: /<command>
     aliases: [food, yum]
-  BetterFishing:
+  FishXp:
     description: Used to manually update fishing xp and levels
-    usage: /<command> <player> <xp|level> <set|add> <number>
+    usage: /<command> [<playerName>] xp|level set|add number

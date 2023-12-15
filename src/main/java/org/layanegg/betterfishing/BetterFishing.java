@@ -1,10 +1,10 @@
 package org.layanegg.betterfishing;
 
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.layanegg.betterfishing.commands.BetterFishingCommand;
+import org.layanegg.betterfishing.commands.FishXpCommand;
 import org.layanegg.betterfishing.commands.FeedCommand;
+import org.layanegg.betterfishing.commands.FishXpTabCompleter;
 import org.layanegg.betterfishing.commands.RodCommand;
 import org.layanegg.betterfishing.listeners.PlayerFishListener;
 import org.layanegg.betterfishing.listeners.PlayerJoinListener;
@@ -21,16 +21,13 @@ public final class BetterFishing extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new PlayerFishListener(this), this);
         Objects.requireNonNull(getCommand("rod")).setExecutor(new RodCommand());
         Objects.requireNonNull(getCommand("feed")).setExecutor(new FeedCommand());
-        Objects.requireNonNull(getCommand("BetterFishing")).setExecutor(new BetterFishingCommand(this));
+        Objects.requireNonNull(getCommand("fishXp")).setExecutor(new FishXpCommand(this));
+        Objects.requireNonNull(getCommand("fishXp")).setTabCompleter(new FishXpTabCompleter());
     }
 
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-    }
-
-    public static Plugin getPlugin(){
-        return this;
     }
 }
